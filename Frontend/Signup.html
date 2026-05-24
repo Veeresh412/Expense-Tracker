@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker - Login</title>
+    <title>Expense Tracker - Sign Up</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Using a modern Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -15,128 +14,123 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- Login Form Container -->
+    <!-- Sign Up Form Container -->
     <div class="login-container">
         <div class="login-card">
-            
             <div class="logo">
-                <span class="logo-icon">💸</span>
-                <h2>Expense Tracker</h2>
+                <span class="logo-icon">✨</span>
+                <h2>Create Account</h2>
             </div>
             
-            <p class="subtitle">Welcome back! Please enter your details.</p>
+            <p class="subtitle">Start tracking your expenses today!</p>
             
             <div id="message-box" style="display: none; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-size: 15px; font-weight: 600;"></div>
 
-            <form id="loginForm" action="#" method="POST" class="login-form">
+            <form id="signupForm" action="#" method="POST" class="login-form">
                 
                 <div class="input-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" placeholder="Enter your username" required>
+                    <input type="text" id="username" placeholder="Choose a username" required>
                 </div>
 
                 <div class="input-group">
                     <label for="password">Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="password" placeholder="••••••••" required>
+                        <input type="password" id="password" placeholder="Create a password" required>
                         <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password">👁️</button>
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <label class="remember-me">
-                        <input type="checkbox"> Remember me
-                    </label>
-                    <a href="#" class="forgot-password">Forgot password?</a>
+                <div class="input-group">
+                    <label for="limit">Monthly Limit ($)</label>
+                    <!-- Type number allows them to enter their budget limit -->
+                    <input type="number" id="limit" placeholder="E.g. 1000" min="0" step="0.01">
                 </div>
 
-                <button type="submit" class="btn-primary">Log In</button>
+                <button type="submit" class="btn-primary">Sign Up</button>
             </form>
 
             <p class="signup-prompt">
-                Don't have an account? <a href="Signup.html">Sign up for free</a>
+                Already have an account? <a href="Login.html">Log in here</a>
             </p>
-
         </div>
     </div>
 
     <script>
-        //show password code
+        // Password toggle feature (same as login)
         const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
+        const passwordInput = document.querySelector('#password');
 
         togglePassword.addEventListener('click', function () {
-            // Toggle the type attribute
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            
-            // Toggle the eye icon emoji
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
             this.textContent = type === 'password' ? '👁️' : '🙈';
         });
-        // Form Submission, Validation, and Backend Connection
-        const loginForm = document.getElementById('loginForm');
+
+        // Form Submission and Backend Connection
+        const signupForm = document.getElementById('signupForm');
         const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
+        const limitInput = document.getElementById('limit');
         const messageBox = document.getElementById('message-box');
 
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault(); // Stop the page from refreshing when you click submit!
+        signupForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); 
 
             const userName = usernameInput.value.trim();
             const passwordValue = passwordInput.value;
+            // Convert limit string to a float number, or send null if they left it blank
+            const limitValue = limitInput.value ? parseFloat(limitInput.value) : null;
 
-            // 1. Client-Side Validation
             if (userName.length < 3) {
-                showMessage("Username must be at least 3 characters long.", "error");
+                showMessage("Username must be at least 3 characters.", "error");
                 return;
             }
             if (passwordValue.length < 4) {
-                showMessage("Password must be at least 4 characters long.", "error");
+                showMessage("Password must be at least 4 characters.", "error");
                 return;
             }
 
-            // 2. Send to Spring Boot Backend
             try {
-                // Change the button text while loading
-                const submitBtn = loginForm.querySelector('.btn-primary');
+                const submitBtn = signupForm.querySelector('.btn-primary');
                 const originalBtnText = submitBtn.textContent;
-                submitBtn.textContent = "Logging in...";
+                submitBtn.textContent = "Creating Account...";
                 submitBtn.disabled = true;
 
-                const response = await fetch("http://localhost:8080/api/user/login", {
+                // POST request to your sign up endpoint
+                const response = await fetch("http://localhost:8080/api/user", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    // Send the data exactly as your Java 'User' class expects it
                     body: JSON.stringify({
                         userName: userName,
-                        password: passwordValue
+                        password: passwordValue,
+                        limit: limitValue
                     })
                 });
 
-                const result = await response.text(); // Your backend returns a String!
-
-                // 3. Handle the Response
-                if (result === "Login Successful!") {
-                    showMessage(result, "success");
-                    // Eventually, you will redirect them to the dashboard here!
-                    // window.location.href = "Dashboard.html";
+                // If Spring Boot successfully saved the user, it returns a 200 OK status
+                if (response.ok) {
+                    showMessage("Account created successfully! Redirecting to login...", "success");
+                    
+                    // Automatically send them to the login page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = "Login.html";
+                    }, 2000);
                 } else {
-                    // "User NOT Found" or "Incorrect Password"
-                    showMessage(result, "error");
+                    // This triggers if Spring Boot throws an error (e.g. if the username already exists)
+                    showMessage("Failed to create account. Username might be taken.", "error");
                 }
                 
-                // Reset button
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
 
             } catch (error) {
                 console.error("Error connecting to backend:", error);
-                showMessage("Could not connect to the server.", "error");
+                showMessage("Could not connect to the server. Is Spring Boot running?", "error");
                 
-                const submitBtn = loginForm.querySelector('.btn-primary');
-                submitBtn.textContent = "Log In";
+                const submitBtn = signupForm.querySelector('.btn-primary');
+                submitBtn.textContent = "Sign Up";
                 submitBtn.disabled = false;
             }
         });
@@ -147,11 +141,11 @@
             messageBox.textContent = msg;
             if (type === "error") {
                 messageBox.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
-                messageBox.style.color = "#fca5a5"; // light red
+                messageBox.style.color = "#fca5a5"; 
                 messageBox.style.border = "1px solid rgba(239, 68, 68, 0.5)";
             } else {
                 messageBox.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
-                messageBox.style.color = "#6ee7b7"; // light green
+                messageBox.style.color = "#6ee7b7"; 
                 messageBox.style.border = "1px solid rgba(16, 185, 129, 0.5)";
             }
         }
