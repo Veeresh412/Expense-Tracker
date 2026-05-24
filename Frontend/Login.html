@@ -25,8 +25,10 @@
             </div>
             
             <p class="subtitle">Welcome back! Please enter your details.</p>
+            
+            <div id="message-box" style="display: none; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-size: 15px; font-weight: 600;"></div>
 
-            <form action="#" method="POST" class="login-form">
+            <form id="loginForm" action="#" method="POST" class="login-form">
                 
                 <div class="input-group">
                     <label for="username">Username</label>
@@ -71,6 +73,88 @@
             // Toggle the eye icon emoji
             this.textContent = type === 'password' ? '👁️' : '🙈';
         });
+        // Form Submission, Validation, and Backend Connection
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const messageBox = document.getElementById('message-box');
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop the page from refreshing when you click submit!
+
+            const userName = usernameInput.value.trim();
+            const passwordValue = passwordInput.value;
+
+            // 1. Client-Side Validation
+            if (userName.length < 3) {
+                showMessage("Username must be at least 3 characters long.", "error");
+                return;
+            }
+            if (passwordValue.length < 4) {
+                showMessage("Password must be at least 4 characters long.", "error");
+                return;
+            }
+
+            // 2. Send to Spring Boot Backend
+            try {
+                // Change the button text while loading
+                const submitBtn = loginForm.querySelector('.btn-primary');
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = "Logging in...";
+                submitBtn.disabled = true;
+
+                const response = await fetch("http://localhost:8080/api/user/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    // Send the data exactly as your Java 'User' class expects it
+                    body: JSON.stringify({
+                        userName: userName,
+                        password: passwordValue
+                    })
+                });
+
+                const result = await response.text(); // Your backend returns a String!
+
+                // 3. Handle the Response
+                if (result === "Login Successful!") {
+                    showMessage(result, "success");
+                    // Eventually, you will redirect them to the dashboard here!
+                    // window.location.href = "Dashboard.html";
+                } else {
+                    // "User NOT Found" or "Incorrect Password"
+                    showMessage(result, "error");
+                }
+                
+                // Reset button
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+
+            } catch (error) {
+                console.error("Error connecting to backend:", error);
+                showMessage("Could not connect to the server.", "error");
+                
+                const submitBtn = loginForm.querySelector('.btn-primary');
+                submitBtn.textContent = "Log In";
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Helper function to show beautiful error/success messages
+        function showMessage(msg, type) {
+            messageBox.style.display = "block";
+            messageBox.textContent = msg;
+            if (type === "error") {
+                messageBox.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
+                messageBox.style.color = "#fca5a5"; // light red
+                messageBox.style.border = "1px solid rgba(239, 68, 68, 0.5)";
+            } else {
+                messageBox.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
+                messageBox.style.color = "#6ee7b7"; // light green
+                messageBox.style.border = "1px solid rgba(16, 185, 129, 0.5)";
+            }
+        }
     </script>
 </body>
 </html>
