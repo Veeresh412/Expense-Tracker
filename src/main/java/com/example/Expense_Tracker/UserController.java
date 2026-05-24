@@ -20,10 +20,30 @@ public class UserController
     @Autowired
     UserRepository repository;
 
-    @PostMapping
+    @PostMapping // sign up post mapping
     public User createUser(@RequestBody User newUser)
     {
         return repository.save(newUser);
+    }
+
+    @PostMapping("/login") //log in post mapping
+    public String loginUser(@RequestBody User loginDetails)
+    {
+        User existingUser = repository.findByUserName(loginDetails.getUserName());
+
+        if(existingUser == null)
+        {
+            return "User NOT Found"; //check if user exists
+        }
+
+        if(existingUser.getPassword().equals(loginDetails.getPassword()))//matches password
+        {
+            return "Login Successful!";
+        }
+        else
+        {
+            return "Incorrect Password";
+        }
     }
 
     @GetMapping
