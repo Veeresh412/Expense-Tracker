@@ -165,7 +165,10 @@
                             <span class="transaction-date">${exp.date || 'No Date'}</span>
                         </div>
                     </div>
-                    <span class="transaction-amount" style="color: ${color};">${sign}₹${exp.amount}</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="transaction-amount" style="color: ${color};">${sign}₹${exp.amount}</span>
+                        <button onclick="deleteExpense(${exp.expId})" class="delete-btn" title="Delete">🗑️</button>
+                    </div>
                 `;
                 // Insert at top to show newest first
                 transactionList.insertBefore(li, transactionList.firstChild);
@@ -230,7 +233,23 @@
             }
         });
 
-        // 5. Logout
+        // 5. Delete Expense
+        async function deleteExpense(expId) {
+            if (!confirm("Are you sure you want to delete this transaction?")) return;
+            
+            try {
+                const res = await fetch(`http://localhost:8080/api/expenses/${expId}`, {
+                    method: 'DELETE'
+                });
+                if (res.ok) {
+                    loadDashboard(); // Reload dashboard to update math and UI
+                }
+            } catch (error) {
+                console.error("Failed to delete", error);
+            }
+        }
+
+        // 6. Logout
         document.getElementById('logout-btn').addEventListener('click', function() {
             localStorage.removeItem('userId');
             window.location.href = 'Login.html';

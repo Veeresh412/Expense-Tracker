@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -46,5 +47,11 @@ public class ExpenseController
         }
         
         return null; // we throw an error here if the user wasn't found
+    }
+
+    @DeleteMapping("/{expId}")
+    public void deleteExpense(@PathVariable Long expId)
+    {
+        repository.deleteById(expId);
     }
 }
