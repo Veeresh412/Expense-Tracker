@@ -43,19 +43,18 @@
                     <h3>Quick Add Expense</h3>
                     <form id="addExpenseForm" class="quick-add-form">
                         <div class="input-row">
-                            <input type="text" id="exp-desc" placeholder="What did you buy?" required>
+                            <input type="text" id="exp-desc" placeholder="Description" required>
                             <input type="number" id="exp-amount" placeholder="₹ Amount" min="0" step="1" required>
                         </div>
                         <div class="input-row">
-                            <input type="date" id="exp-date" required>
-                            <select id="exp-category" required>
-                                <option value="" disabled selected>Category</option>
-                                <option value="Food">🍔 Food</option>
-                                <option value="Transport">🚗 Transport</option>
-                                <option value="Entertainment">🎬 Entertainment</option>
-                                <option value="Shopping">🛍️ Shopping</option>
-                                <option value="Other">✨ Other</option>
+                            <select id="exp-type" required>
+                                <option value="DEBIT" selected>Debit (-)</option>
+                                <option value="CREDIT">Credit (+)</option>
                             </select>
+                            <input type="date" id="exp-date" required>
+                        </div>
+                        <div class="input-row">
+                            <input type="text" id="exp-category" placeholder="Category (e.g. Food)" required>
                             <button type="submit" class="btn-primary">Add</button>
                         </div>
                     </form>
@@ -69,23 +68,23 @@
                     <!-- Placeholder Data to show you how it looks -->
                     <li class="transaction-item">
                         <div class="transaction-info">
-                            <span class="transaction-icon">🍔</span>
-                            <div class="transaction-details">
-                                <h4>Chipotle</h4>
-                                <span class="transaction-date">Today, 1:30 PM</span>
-                            </div>
-                        </div>
-                        <span class="transaction-amount">-₹450</span>
-                    </li>
-                    <li class="transaction-item">
-                        <div class="transaction-info">
-                            <span class="transaction-icon">🎬</span>
+                            <div class="transaction-icon">EN</div>
                             <div class="transaction-details">
                                 <h4>Netflix Subscription</h4>
                                 <span class="transaction-date">Yesterday</span>
                             </div>
                         </div>
-                        <span class="transaction-amount">-₹650</span>
+                        <span class="transaction-amount" style="color: #ef4444;">-₹650</span>
+                    </li>
+                    <li class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon">OT</div>
+                            <div class="transaction-details">
+                                <h4>Split Bill (Rahul)</h4>
+                                <span class="transaction-date">Monday</span>
+                            </div>
+                        </div>
+                        <span class="transaction-amount" style="color: #10b981;">+₹1200</span>
                     </li>
                 </ul>
             </div>
@@ -109,33 +108,33 @@
             const amount = parseFloat(document.getElementById('exp-amount').value).toFixed(2);
             const category = document.getElementById('exp-category').value;
             const expenseDate = document.getElementById('exp-date').value;
+            const type = document.getElementById('exp-type').value;
+
+            // Format based on CREDIT or DEBIT
+            const isCredit = type === 'CREDIT';
+            const sign = isCredit ? '+' : '-';
+            const color = isCredit ? '#10b981' : '#ef4444';
             
-            // Map category to emoji
-            const emojiMap = {
-                'Food': '🍔',
-                'Transport': '🚗',
-                'Entertainment': '🎬',
-                'Shopping': '🛍️',
-                'Other': '✨'
-            };
+            // Create a 2-letter icon from the category name instead of emojis
+            const iconText = category.substring(0, 2).toUpperCase();
 
             const li = document.createElement('li');
             li.className = 'transaction-item new-item';
             li.innerHTML = `
                 <div class="transaction-info">
-                    <span class="transaction-icon">${emojiMap[category] || '💸'}</span>
+                    <div class="transaction-icon">${iconText}</div>
                     <div class="transaction-details">
                         <h4>${desc}</h4>
                         <span class="transaction-date">${expenseDate}</span>
                     </div>
                 </div>
-                <span class="transaction-amount">-₹${amount}</span>
+                <span class="transaction-amount" style="color: ${color};">${sign}₹${amount}</span>
             `;
             
             // Insert at the top of the list
             transactionList.insertBefore(li, transactionList.firstChild);
             
-            // Clear form (except for date, we keep it as today)
+            // Clear form (except for date and type)
             document.getElementById('exp-desc').value = '';
             document.getElementById('exp-amount').value = '';
             document.getElementById('exp-category').value = '';
