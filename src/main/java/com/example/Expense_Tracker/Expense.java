@@ -33,6 +33,9 @@ public class Expense
     @Column(name="expense_date")
     private LocalDate date;
 
+    @Column(name="transaction_type",nullable=false)
+    private String type;  // credit or debit
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable=false)
     private User user; // foreign key
@@ -82,6 +85,15 @@ public class Expense
     public void setDate(LocalDate date)
     {
         this.date=date;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+    public void setType(String type)
+    {
+        this.type=type;
     }
 
     public User getUser()
