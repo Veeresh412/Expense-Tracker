@@ -31,12 +31,12 @@
             <!-- Top Section: Summary Cards -->
             <div class="summary-cards">
                 <div class="glass-card summary-card">
-                    <h3>Spent this Month</h3>
-                    <h1 class="amount">₹15,450</h1>
+                    <h3>Net Spending</h3>
+                    <h1 class="amount" id="net-spending">₹0</h1>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 45%;"></div>
+                        <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
                     </div>
-                    <p class="limit-text">45% of your ₹34,000 limit</p>
+                    <p class="limit-text" id="limit-text">Loading...</p>
                 </div>
                 
                 <div class="glass-card summary-card">
@@ -92,58 +92,152 @@
     </div>
 
     <script>
-        // Temporary logic for adding expenses to the UI before backend integration
+        // 1. Auth Check
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            window.location.href = "Login.html";
+        }
+
         const addExpenseForm = document.getElementById('addExpenseForm');
         const transactionList = document.getElementById('transaction-list');
         const dateInput = document.getElementById('exp-date');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const netSpendingEl = document.getElementById('net-spending');
+        const progressBarEl = document.getElementById('progress-bar');
+        const limitTextEl = document.getElementById('limit-text');
 
         // Automatically set the date input to today's date
-        const today = new Date().toISOString().split('T')[0];
-        dateInput.value = today;
+        dateInput.value = new Date().toISOString().split('T')[0];
 
-        addExpenseForm.addEventListener('submit', function(e) {
+        let userLimit = 10000; // default
+
+        // 2. Fetch Data from Backend
+        async function loadDashboard() {
+            try {
+                // Fetch User Info
+                const userRes = await fetch(`http://localhost:8080/api/user/${userId}`);
+                if (userRes.ok) {
+                    const user = await userRes.json();
+                    welcomeMessage.innerText = `Welcome, ${user.userName}!`;
+                    userLimit = user.limit;
+                }
+
+                // Fetch Expenses
+                const expRes = await fetch(`http://localhost:8080/api/expenses/${userId}`);
+                if (expRes.ok) {
+                    const expenses = await expRes.json();
+                    renderDashboard(expenses);
+                }
+            } catch (error) {
+                console.error("Error fetching dashboard data:", error);
+            }
+        }
+
+        // 3. Render and Calculate
+        function renderDashboard(expenses) {
+            // Clear existing list
+            transactionList.innerHTML = '';
+            
+            let totalDebits = 0;
+            let totalCredits = 0;
+
+            // Render Items
+            expenses.forEach(exp => {
+                // Arithmetic
+                if (exp.type === 'CREDIT') {
+                    totalCredits += parseFloat(exp.amount);
+                } else {
+                    totalDebits += parseFloat(exp.amount);
+                }
+
+                const isCredit = exp.type === 'CREDIT';
+                const sign = isCredit ? '+' : '-';
+                const color = isCredit ? '#10b981' : '#ef4444';
+                const iconText = (exp.category || 'NA').substring(0, 2).toUpperCase();
+
+                const li = document.createElement('li');
+                li.className = 'transaction-item';
+                li.innerHTML = `
+                    <div class="transaction-info">
+                        <div class="transaction-icon">${iconText}</div>
+                        <div class="transaction-details">
+                            <h4>${exp.description || 'Unknown'}</h4>
+                            <span class="transaction-date">${exp.date || 'No Date'}</span>
+                        </div>
+                    </div>
+                    <span class="transaction-amount" style="color: ${color};">${sign}₹${exp.amount}</span>
+                `;
+                // Insert at top to show newest first
+                transactionList.insertBefore(li, transactionList.firstChild);
+            });
+
+            // Calculate Net Spending
+            const netSpending = totalDebits - totalCredits;
+            
+            if (netSpending < 0) {
+                // In abundance!
+                const abundanceAmount = Math.abs(netSpending).toFixed(2);
+                netSpendingEl.innerText = `+₹${abundanceAmount}`;
+                netSpendingEl.style.color = '#10b981';
+                
+                progressBarEl.style.width = '0%';
+                progressBarEl.style.backgroundColor = '#10b981';
+                limitTextEl.innerText = `You are ₹${abundanceAmount} in abundance! (Limit: ₹${userLimit})`;
+            } else {
+                // Normal spending
+                netSpendingEl.innerText = `₹${netSpending.toFixed(2)}`;
+                netSpendingEl.style.color = 'var(--text-main)';
+                
+                let percent = (netSpending / userLimit) * 100;
+                if (percent > 100) percent = 100; // Cap visually at 100%
+                
+                progressBarEl.style.width = `${percent}%`;
+                progressBarEl.style.backgroundColor = percent > 90 ? '#ef4444' : 'var(--primary)';
+                limitTextEl.innerText = `${percent.toFixed(1)}% of your ₹${userLimit} limit`;
+            }
+        }
+
+        // 4. Handle Form Submission to Backend
+        addExpenseForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const desc = document.getElementById('exp-desc').value;
-            const amount = parseFloat(document.getElementById('exp-amount').value).toFixed(2);
-            const category = document.getElementById('exp-category').value;
-            const expenseDate = document.getElementById('exp-date').value;
-            const type = document.getElementById('exp-type').value;
+            const newExpense = {
+                description: document.getElementById('exp-desc').value,
+                amount: parseFloat(document.getElementById('exp-amount').value),
+                category: document.getElementById('exp-category').value,
+                date: document.getElementById('exp-date').value,
+                type: document.getElementById('exp-type').value
+            };
 
-            // Format based on CREDIT or DEBIT
-            const isCredit = type === 'CREDIT';
-            const sign = isCredit ? '+' : '-';
-            const color = isCredit ? '#10b981' : '#ef4444';
-            
-            // Create a 2-letter icon from the category name instead of emojis
-            const iconText = category.substring(0, 2).toUpperCase();
-
-            const li = document.createElement('li');
-            li.className = 'transaction-item new-item';
-            li.innerHTML = `
-                <div class="transaction-info">
-                    <div class="transaction-icon">${iconText}</div>
-                    <div class="transaction-details">
-                        <h4>${desc}</h4>
-                        <span class="transaction-date">${expenseDate}</span>
-                    </div>
-                </div>
-                <span class="transaction-amount" style="color: ${color};">${sign}₹${amount}</span>
-            `;
-            
-            // Insert at the top of the list
-            transactionList.insertBefore(li, transactionList.firstChild);
-            
-            // Clear form (except for date and type)
-            document.getElementById('exp-desc').value = '';
-            document.getElementById('exp-amount').value = '';
-            document.getElementById('exp-category').value = '';
+            try {
+                const res = await fetch(`http://localhost:8080/api/expenses/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newExpense)
+                });
+                
+                if (res.ok) {
+                    // Clear form inputs
+                    document.getElementById('exp-desc').value = '';
+                    document.getElementById('exp-amount').value = '';
+                    document.getElementById('exp-category').value = '';
+                    
+                    // Reload dashboard to get fresh data from database
+                    loadDashboard();
+                }
+            } catch (error) {
+                console.error("Failed to add expense", error);
+            }
         });
 
-        // Logout
+        // 5. Logout
         document.getElementById('logout-btn').addEventListener('click', function() {
+            localStorage.removeItem('userId');
             window.location.href = 'Login.html';
         });
+
+        // Initial Load
+        loadDashboard();
     </script>
 </body>
 </html>

@@ -115,16 +115,22 @@
                     })
                 });
 
-                const result = await response.text(); // Your backend returns a String!
+                // We now expect JSON back from the server
+                const result = await response.json(); 
 
                 // 3. Handle the Response
-                if (result === "Login Successful!") {
-                    showMessage(result, "success");
-                    // Eventually, you will redirect them to the dashboard here!
-                    // window.location.href = "Dashboard.html";
+                if (response.ok) {
+                    showMessage(result.message, "success");
+                    // Save the userId to the browser's local storage
+                    localStorage.setItem('userId', result.userId);
+                    
+                    // Redirect them to the dashboard!
+                    setTimeout(() => {
+                        window.location.href = "Dashboard.html";
+                    }, 1000);
                 } else {
                     // "User NOT Found" or "Incorrect Password"
-                    showMessage(result, "error");
+                    showMessage(result.message, "error");
                 }
                 
                 // Reset button
