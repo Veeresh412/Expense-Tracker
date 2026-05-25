@@ -203,13 +203,13 @@ body {
     color: white;
     border: none;
     padding: 22px;
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 22px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 10px;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
 }
 
 .btn-primary:hover {

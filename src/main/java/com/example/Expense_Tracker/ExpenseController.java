@@ -1,6 +1,10 @@
 package com.example.Expense_Tracker;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -53,5 +57,60 @@ public class ExpenseController
     public void deleteExpense(@PathVariable Long expId)
     {
         repository.deleteById(expId);
+    }
+
+    // GET /api/expenses/analytics/{userId}
+    @GetMapping("/analytics/{userId}")
+    public List<Object[]> getAnalytics(@PathVariable Long userId)
+    {
+        return repository.getCategoryWiseExpenses(userId);
+    }
+
+    // GET /api/expenses/analytics/average/{userId}
+    @GetMapping("/analytics/average/{userId}")
+    public List<Object[]> getAverageCostAnalytics(@PathVariable Long userId)
+    {
+        return repository.getAverageCostPerCategory(userId);
+    }
+
+    // GET /api/expenses/analytics/runrate/{userId}
+    @GetMapping("/analytics/runrate/{userId}")
+    public Map<String, Object> getRunRate(@PathVariable Long userId)
+    {
+        Map<String, Object> response = new HashMap<>();
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null || user.getLimit() == null) return response;
+
+        List<Expense> allExpenses = repository.findByUserUserId(userId);
+        
+        LocalDate today = LocalDate.now();
+        int currentMonth = today.getMonthValue();
+        int currentYear = today.getYear();
+        int currentDay = today.getDayOfMonth();
+        int daysInMonth = YearMonth.of(currentYear, currentMonth).lengthOfMonth();
+
+        double totalSpentThisMonth = 0.0;
+
+        for (Expense exp : allExpenses) {
+            if ("DEBIT".equals(exp.getType()) && exp.getDate() != null) {
+                if (exp.getDate().getMonthValue() == currentMonth && exp.getDate().getYear() == currentYear) {
+                    if (exp.getDate().getDayOfMonth() <= currentDay) { 
+                        totalSpentThisMonth += exp.getAmount();
+                    }
+                }
+            }
+        }
+
+        double projectedTotal = 0.0;
+        if (currentDay > 0) {
+            projectedTotal = (totalSpentThisMonth / currentDay) * daysInMonth;
+        }
+
+        response.put("limit", user.getLimit());
+        response.put("spentThisMonth", totalSpentThisMonth);
+        response.put("projectedTotal", projectedTotal);
+        response.put("isOverLimit", projectedTotal > user.getLimit());
+
+        return response;
     }
 }
