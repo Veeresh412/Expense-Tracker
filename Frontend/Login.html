@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Using a modern Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
 </head>
 <body>
     <!-- Animated background elements -->
@@ -97,18 +98,12 @@
 
             // 2. Send to Spring Boot Backend
             try {
-                // Change the button text while loading
-                const submitBtn = loginForm.querySelector('.btn-primary');
-                const originalBtnText = submitBtn.textContent;
-                submitBtn.textContent = "Logging in...";
-                submitBtn.disabled = true;
-
-                const response = await fetch("http://localhost:8080/api/user/login", {
-                    method: "POST",
+                // 2. Make the HTTP Request
+                const response = await fetch(`${API_BASE_URL}/api/user/login`, {
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     },
-                    // Send the data exactly as your Java 'User' class expects it
                     body: JSON.stringify({
                         userName: userName,
                         password: passwordValue

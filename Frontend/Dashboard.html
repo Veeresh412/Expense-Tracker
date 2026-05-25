@@ -6,6 +6,7 @@
     <title>Expense Tracker - Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
 </head>
 <body class="dashboard-body">
     <div class="background-blobs">
@@ -116,7 +117,7 @@
         async function loadDashboard() {
             try {
                 // Fetch User Info
-                const userRes = await fetch(`http://localhost:8080/api/user/${userId}`);
+                const userRes = await fetch(`${API_BASE_URL}/api/user/${userId}`);
                 if (userRes.ok) {
                     const user = await userRes.json();
                     welcomeMessage.innerText = `Welcome, ${user.userName}!`;
@@ -124,7 +125,7 @@
                 }
 
                 // Fetch Expenses
-                const expRes = await fetch(`http://localhost:8080/api/expenses/${userId}`);
+                const expRes = await fetch(`${API_BASE_URL}/api/expenses/${userId}`);
                 if (expRes.ok) {
                     const expenses = await expRes.json();
                     renderDashboard(expenses);
@@ -214,7 +215,7 @@
             };
 
             try {
-                const res = await fetch(`http://localhost:8080/api/expenses/${userId}`, {
+                const res = await fetch(`${API_BASE_URL}/api/expenses/${userId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newExpense)
@@ -239,7 +240,7 @@
             if (!confirm("Are you sure you want to delete this transaction?")) return;
             
             try {
-                const res = await fetch(`http://localhost:8080/api/expenses/${expId}`, {
+                const res = await fetch(`${API_BASE_URL}/api/expenses/${expId}`, {
                     method: 'DELETE'
                 });
                 if (res.ok) {

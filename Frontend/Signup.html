@@ -6,6 +6,7 @@
     <title>Expense Tracker - Sign Up</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
 </head>
 <body>
     <!-- Animated background elements -->
@@ -95,11 +96,11 @@
                 submitBtn.textContent = "Creating Account...";
                 submitBtn.disabled = true;
 
-                // POST request to your sign up endpoint
-                const response = await fetch("http://localhost:8080/api/user", {
-                    method: "POST",
+                // 2. Make the HTTP POST Request
+                const response = await fetch(`${API_BASE_URL}/api/user`, {
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         userName: userName,
