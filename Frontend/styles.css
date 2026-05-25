@@ -269,3 +269,235 @@ body {
 .password-toggle:hover {
     opacity: 1;
 }
+
+/* Dashboard Styles */
+.dashboard-body {
+    align-items: flex-start;
+    padding: 40px 20px;
+}
+
+.dashboard-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#welcome-message {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-main {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
+}
+
+.glass-card h3 {
+    font-size: 20px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+/* Progress Bar */
+.amount {
+    font-size: 48px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, #10b981 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #3b82f6);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.limit-text {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Quick Add Form */
+.quick-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-row {
+    display: flex;
+    gap: 15px;
+}
+
+.input-row input, .input-row select {
+    flex: 1;
+    padding: 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-row input:focus, .input-row select:focus {
+    border-color: var(--primary);
+}
+
+.input-row select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.input-row select option {
+    background: var(--bg-dark);
+    color: white;
+}
+
+.input-row .btn-primary {
+    flex: 0.5;
+    margin-top: 0;
+    padding: 16px;
+}
+
+/* Transactions */
+.transaction-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 16px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.transaction-item:hover {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: var(--border-color);
+    transform: translateX(5px);
+}
+
+.transaction-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.transaction-icon {
+    font-size: 32px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 16px;
+}
+
+.transaction-details h4 {
+    font-size: 18px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.transaction-date {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.transaction-amount {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ef4444; /* Red for expenses */
+}
+
+.new-item {
+    animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+    .input-row {
+        flex-direction: column;
+    }
+}
