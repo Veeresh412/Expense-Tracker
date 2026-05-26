@@ -72,7 +72,7 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 600px;
+    max-width: 450px;
     padding: 20px;
 }
 
@@ -81,8 +81,8 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 60px;
+    border-radius: 20px;
+    padding: 40px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -101,11 +101,11 @@ body {
 }
 
 .logo-icon {
-    font-size: 54px;
+    font-size: 36px;
 }
 
 .logo h2 {
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 600;
     /* Gradient text */
     background: linear-gradient(to right, #10b981 0%, #3b82f6 100%);
@@ -116,15 +116,15 @@ body {
 .subtitle {
     text-align: center;
     color: var(--text-muted);
-    font-size: 18px;
-    margin-bottom: 45px;
+    font-size: 14px;
+    margin-bottom: 30px;
 }
 
 /* Form Styles */
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 16px;
 }
 
 .input-group {
@@ -134,7 +134,7 @@ body {
 }
 
 .input-group label {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--text-muted);
     letter-spacing: 0.5px;
@@ -142,12 +142,12 @@ body {
 
 .input-group input {
     width: 100%;
-    padding: 20px 24px;
+    padding: 14px 16px;
     background: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 10px;
     color: white;
-    font-size: 20px;
+    font-size: 15px;
     outline: none;
     transition: all 0.3s ease;
 }
@@ -166,7 +166,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 17px;
+    font-size: 14px;
     margin-top: -5px;
 }
 
@@ -202,9 +202,9 @@ body {
     background: linear-gradient(135deg, var(--primary) 0%, #047857 100%);
     color: white;
     border: none;
-    padding: 22px;
+    padding: 14px;
     border-radius: 10px;
-    font-size: 22px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -224,8 +224,8 @@ body {
 /* Sign Up Prompt */
 .signup-prompt {
     text-align: center;
-    margin-top: 30px;
-    font-size: 18px;
+    margin-top: 20px;
+    font-size: 14px;
     color: var(--text-muted);
 }
 
@@ -250,15 +250,15 @@ body {
 
 .password-input-wrapper input {
     /* Override right padding to make room for the eye icon */
-    padding-right: 60px;
+    padding-right: 45px;
 }
 
 .password-toggle {
     position: absolute;
-    right: 20px;
+    right: 15px;
     background: none;
     border: none;
-    font-size: 22px;
+    font-size: 18px;
     cursor: pointer;
     opacity: 0.6;
     transition: opacity 0.2s;
@@ -293,7 +293,7 @@ body {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
     border-radius: 20px;
-    padding: 20px 40px;
+    padding: 15px 30px;
     margin-bottom: 30px;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
 }
@@ -305,7 +305,7 @@ body {
 }
 
 #welcome-message {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text-muted);
 }
@@ -314,9 +314,9 @@ body {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid var(--border-color);
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -342,23 +342,23 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 40px;
+    border-radius: 20px;
+    padding: 25px;
     box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
 }
 
 .glass-card h3 {
-    font-size: 20px;
+    font-size: 16px;
     color: var(--text-muted);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-weight: 400;
 }
 
 /* Progress Bar */
 .amount {
-    font-size: 48px;
+    font-size: 36px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     background: linear-gradient(to right, #10b981 0%, #3b82f6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -366,11 +366,11 @@ body {
 
 .progress-bar-container {
     width: 100%;
-    height: 12px;
+    height: 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .progress-bar {
@@ -381,7 +381,7 @@ body {
 }
 
 .limit-text {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-muted);
 }
 
@@ -399,12 +399,12 @@ body {
 
 .input-row input, .input-row select {
     flex: 1;
-    padding: 16px;
+    padding: 12px 14px;
     background: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 10px;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
 }
@@ -426,7 +426,7 @@ body {
 .input-row .btn-primary {
     flex: 0.5;
     margin-top: 0;
-    padding: 16px;
+    padding: 12px;
 }
 
 /* Transactions */
@@ -441,9 +441,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
     background: rgba(15, 23, 42, 0.4);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid transparent;
     transition: all 0.2s;
 }
@@ -457,35 +457,35 @@ body {
 .transaction-info {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .transaction-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 56px;
-    height: 56px;
-    font-size: 20px;
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--primary);
     background: rgba(16, 185, 129, 0.1);
-    border-radius: 16px;
+    border-radius: 12px;
 }
 
 .transaction-details h4 {
-    font-size: 18px;
+    font-size: 15px;
     color: white;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .transaction-date {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-muted);
 }
 
 .transaction-amount {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
 }
 
@@ -493,7 +493,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 18px;
     opacity: 0.5;
     transition: opacity 0.2s, transform 0.2s;
 }

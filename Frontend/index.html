@@ -98,6 +98,11 @@
 
             // 2. Send to Spring Boot Backend
             try {
+                const submitBtn = loginForm.querySelector('.btn-primary');
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.textContent = "Logging In...";
+                submitBtn.disabled = true;
+
                 // 2. Make the HTTP Request
                 const response = await fetch(`${API_BASE_URL}/api/user/login`, {
                     method: 'POST',
