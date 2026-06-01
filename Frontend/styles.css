@@ -523,4 +523,32 @@ body {
     .input-row {
         flex-direction: column;
     }
+    
+    /* Navbar adjustments */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 15px 20px;
+    }
+    .nav-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    /* Login & Glass cards padding reduction */
+    .login-card, .glass-card {
+        padding: 20px;
+    }
+    
+    /* Transaction list adjustments */
+    .transaction-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .delete-btn {
+        align-self: flex-end;
+        margin-top: -30px;
+    }
 }
